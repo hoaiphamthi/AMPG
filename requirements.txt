@@ -1,0 +1,9 @@
+matplotlib
+numpy
+pandas
+quadprog
+scipy
+scikit-learn
+tabulate
+pymoo
+openpyxl
