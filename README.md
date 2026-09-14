@@ -76,3 +76,18 @@ Execution creates a timestamped or parameter-named output directory (e.g., `Resu
     *   `Error_Stats`: Breakdown of error codes encountered during execution.
 *   Plots for starting/ending points (if enabled).
 *   For Performance profiles: run the `plots.py` file, replacing the path with the corresponding result file path.
+
+## Appendix: Benchmark datasets for SFS problems
+The datasets used in the SFS experiments are sourced from standard public repositories:
+
+| Dataset | Source |
+| :--- | :--- |
+| **CMC** | [UCI Repository](https://archive.ics.uci.edu/dataset/30/contraceptive+method+choice) |
+| **Heart** | [UCI Repository](https://archive.ics.uci.edu/dataset/45/heart+disease) |
+| **Parkinsons** | [UCI Repository](https://archive.ics.uci.edu/dataset/174/parkinsons) |
+| **Ionosphere** | [UCI Repository](https://archive.ics.uci.edu/dataset/52/ionosphere) |
+| **Gallstone** | [UCI Repository](https://archive.ics.uci.edu/dataset/1150/gallstone-1) |
+| **Musk-v1** | [UCI Repository](https://archive.ics.uci.edu/dataset/74/musk+version+1) |
+| **Arrhythmia** | [UCI Repository](https://archive.ics.uci.edu/dataset/5/arrhythmia) |
+| **Darwin** | [UCI Repository](https://archive.ics.uci.edu/dataset/732/darwin) |
+
