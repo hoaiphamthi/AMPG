@@ -13,7 +13,7 @@ EXCEL_PATH = r"Results_robust_problem_alpha=1.5_beta=6_c0=0.2_c1=0.19\Results.xl
 METRICS = [
     "Time(ms)", "Iter",
     "Stepsize",
-    "Hypervolume", "Spread_Delta", "Purity",
+    "Hypervolume", "Spread_Gamma", "Purity",
     "Global_nondominated", "H-Ev",
 ]
 
@@ -117,8 +117,8 @@ def plot_performance_profiles(excel_path=None, save_path=None):
         display_title = metric
         if metric == "Spread_Gamma":
             display_title = r"Spread ($\Gamma$)"
-        elif metric == "Spread_Delta":
-            display_title = r"Spread ($\Delta$)"
+        elif metric == "Spread_Gamma":
+            display_title = r"Spread ($\Gamma$)"
 
         if col_name is None:
             plt.close(fig)
