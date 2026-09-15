@@ -27,7 +27,7 @@ def run_problem(problem_index, problems, methods, computePoints, num_starts=100)
     np.random.seed(42) 
 
     selected_problem = problems[problem_index]
-    _random = (8 * np.random.rand() + 2) / 100
+    delta_random = (8 * np.random.rand() + 2) / 100
 
 
     [n, m, l, u, x_samples] = inip(selected_problem, num_starts)
