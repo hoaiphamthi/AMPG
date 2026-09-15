@@ -27,13 +27,13 @@ def run_problem(problem_index, problems, methods, computePoints, num_starts=100)
     np.random.seed(42) 
 
     selected_problem = problems[problem_index]
-    delta_random = (8 * np.random.rand() + 2) / 100
+    _random = (8 * np.random.rand() + 2) / 100
 
 
     [n, m, l, u, x_samples] = inip(selected_problem, num_starts)
     real_num_starts = len(x_samples) 
 
-    ## Select x0 in dom(F) to compute delta (controlling the uncertainty of the robust problem)
+    ## Select x0 in dom(F) to compute  (controlling the uncertainty of the robust problem)
     x0_ref = x_samples[0]
 
     delta = delta_random * np.linalg.norm(x0_ref)
@@ -107,7 +107,7 @@ def run_problem(problem_index, problems, methods, computePoints, num_starts=100)
                 continue
 
     # Compute metrics for each method 
-    metrics = {method: {"N": 0, "Purity": np.nan, "Hypervolume": np.nan, "Delta (Spread)": np.nan} for method in methods}
+    metrics = {method: {"N": 0, "Purity": np.nan, "Hypervolume": np.nan, "Spread_Gamma": np.nan} for method in methods}
     results_list = None
 
     try:
@@ -176,12 +176,12 @@ def run_problem(problem_index, problems, methods, computePoints, num_starts=100)
             metrics.get(method_name, {}).get("Global_nondominated", 0),
             metrics.get(method_name, {}).get("Purity", np.nan),
             metrics.get(method_name, {}).get("Hypervolume", np.nan),
-            metrics.get(method_name, {}).get("Spread_Delta", np.nan),
+            metrics.get(method_name, {}).get("Spread_Gamma", np.nan),
         ])
 
     # Save to data frame
     columns = ["Method", "Success", "Time(ms)", "Iter", "Stepsize", "H-Ev",  
-               "Global_nondominated", "Purity", "Hypervolume", "Spread_Delta"]
+               "Global_nondominated", "Purity", "Hypervolume", "Spread_Gamma"]
 
     df = pd.DataFrame(table, columns=columns)
     df.insert(0, "Problem", selected_problem)
