@@ -206,7 +206,7 @@ def run_all_files(
                     "Global_nondom": cmp_metrics_current.get(method, {}).get("Global_nondominated", 0),
                     "HV": cmp_metrics_current.get(method, {}).get("Hypervolume", float("nan")),
                     "Purity": cmp_metrics_current.get(method, {}).get("Purity", float("nan")),
-                    "Spread_Delta": cmp_metrics_current.get(method, {}).get("Spread_Delta", float("nan")),
+                    "Spread_Gamma": cmp_metrics_current.get(method, {}).get("Spread_Gamma", float("nan")),
                 }
                 data_metrics_current.append(row)
             
@@ -294,7 +294,7 @@ if __name__ == "__main__":
             metrics_results[dataset_name][f"Global Nondom ({method})"] = cmp_metrics.get(method, {}).get("Global_nondominated", 0)
             metrics_results[dataset_name][f"HV ({method})"] = cmp_metrics.get(method, {}).get("Hypervolume", float("nan"))
             metrics_results[dataset_name][f"Purity ({method})"] = cmp_metrics.get(method, {}).get("Purity", float("nan"))
-            metrics_results[dataset_name][f"Spread_Delta ({method})"] = cmp_metrics.get(method, {}).get("Spread_Delta", float("nan"))
+            metrics_results[dataset_name][f"Spread_Gamma ({method})"] = cmp_metrics.get(method, {}).get("Spread_Gamma", float("nan"))
 
     # 2. Prepare Metrics DataFrame
     data_metrics = []
@@ -318,14 +318,14 @@ if __name__ == "__main__":
                 "Global_nondominated": mets.get(f"Global Nondom ({method})", 0),
                 "Hypervolume": mets.get(f"HV ({method})", float("nan")),
                 "Purity": mets.get(f"Purity ({method})", float("nan")),
-                "Spread_Delta": mets.get(f"Spread_Delta ({method})", float("nan")),
+                "Spread_Gamma": mets.get(f"Spread_Gamma ({method})", float("nan")),
             }
             data_metrics.append(row)
 
     df_metrics = pd.DataFrame(data_metrics)
     
     print("\n" + "=" * 100)
-    print("SUMMARY OF PERFORMANCE METRICS (Iterations, Time, Time/Iter, Success, Stepsize, HV, Spread_Delta, Global Non-Dominated)")
+    print("SUMMARY OF PERFORMANCE METRICS (Iterations, Time, Time/Iter, Success, Stepsize, HV, Spread_Gamma, Global Non-Dominated)")
     print("=" * 100)
     with pd.option_context("display.max_rows", None, "display.max_columns", None, "display.width", 1200):
         print(df_metrics.to_string(index=False))
