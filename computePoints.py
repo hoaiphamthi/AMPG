@@ -179,7 +179,7 @@ class computePoints:
         hv = HV(ref_point=reference_point)
         return hv(f_nondominated)
 
-    # Compute Multi-objective Spread (Delta) indicator
+    # Compute Multi-objective Spread (Gamma) indicator
     @staticmethod
     def compute_spread(F_method, Q, R):
         F_method = np.array(F_method)
@@ -188,27 +188,27 @@ class computePoints:
         if N < 2:
             return float('inf')
             
-        delta_vals = []
+        gamma_vals = []
         
         for j in range(m):
             sorted_fj = np.sort(F_method[:, j])
             fj_all = np.concatenate(([Q[j]], sorted_fj, [R[j]]))
-            delta = np.diff(fj_all)  
+            gamma = np.diff(fj_all)  
             
-            delta_0, delta_N = delta[0], delta[-1]
-            delta_inner = delta[1:-1] 
-            delta_bar = np.mean(delta_inner)
+            gamma_0, gamma_N = gamma[0], gamma[-1]
+            gamma_inner = gamma[1:-1] 
+            gamma_bar = np.mean(gamma_inner)
             
-            sum_abs_diff = np.sum(np.abs(delta_inner - delta_bar))
-            numerator = delta_0 + delta_N + sum_abs_diff
-            denominator = delta_0 + delta_N + (N - 1) * delta_bar
+            sum_abs_diff = np.sum(np.abs(gamma_inner - gamma_bar))
+            numerator = gamma_0 + gamma_N + sum_abs_diff
+            denominator = gamma_0 + gamma_N + (N - 1) * gamma_bar
             
             if denominator == 0:
-                delta_vals.append(float('inf'))
+                gamma_vals.append(float('inf'))
             else:
-                delta_vals.append(numerator / denominator)
+                gamma_vals.append(numerator / denominator)
                 
-        return np.max(delta_vals)
+        return np.max(gamma_vals)
 
     # Find local nondominated points for each method
     @staticmethod
@@ -265,16 +265,16 @@ class computePoints:
 
             hv_metric = computePoints.compute_hypervolume(F_method, reference_point) if reference_point is not None else 0
             if Q is not None and R is not None:
-                delta_metric = computePoints.compute_spread(F_method, Q, R)
+                gamma_metric = computePoints.compute_spread(F_method, Q, R)
             else:
-                delta_metric = float('inf')
+                gamma_metric = float('inf')
 
             metrics[method] = {
                 "Purity": purity_metric,
                 "N": num_nondominated,
                 "Global_nondominated": len(F_method_in_global),
                 "Hypervolume": hv_metric,
-                "Spread_Delta": delta_metric,
+                "Spread_Gamma": gamma_metric,
             }
 
             results[method] = {
