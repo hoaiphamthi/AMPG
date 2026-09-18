@@ -3,12 +3,13 @@ import numpy as np
 import pandas as pd
 import sys
 import os
-import re
 from computePoints import NonDominatedSorting, get_global_nondominated_indices
 
 # ========== CONFIG (from plot_performance_profiles) ==========
-#EXCEL_PATH = r"Result_sfs_benchmark_alpha=1.5_beta=6_c0=0.2_c1=0.19\Results.xlsx"
-EXCEL_PATH = r"Results_robust_problem_alpha=1.5_beta=6_c0=0.2_c1=0.19\Results.xlsx"
+EXCEL_PATH = r"Result_sfs_benchmark_alpha=1.5_beta=6_c0=0.2_c1=0.19\Results.xlsx"
+#EXCEL_PATH = r"Results_robust_problem_alpha=1.5_beta=6_c0=0.2_c1=0.19\Results.xlsx"
+# EXCEL_PATH = r"Result_benchmark\Results.xlsx"
+#EXCEL_PATH = r"Results_synthetic\Results.xlsx"
 
 METRICS = [
     "Time(ms)", "Iter",
@@ -40,7 +41,6 @@ METHOD_STYLE = {
     "accPGM": {"color": "orange", "marker": "*"}
 }
 
-color_cycle = COLORS # Using the combined colors list
 
 def resolve_column(df, aliases):
     for c in aliases:
@@ -65,7 +65,6 @@ def plot_performance_profiles(excel_path=None, save_path=None):
     if save_path is None:
         save_dir = f"Performance_profiles_{dir_name}"
     else:
-        # Nếu truyền save_path dạng file .png, bỏ đuôi png làm thư mục
         if save_path.lower().endswith(".png"):
             save_dir = save_path[:-4]
         else:
@@ -74,7 +73,7 @@ def plot_performance_profiles(excel_path=None, save_path=None):
     os.makedirs(save_dir, exist_ok=True)
 
     if not os.path.exists(excel_path):
-        print(f"[LỖI] Không tìm thấy file: {excel_path}")
+        print(f"[ERROR] File not found: {excel_path}")
         return
 
     df = pd.read_excel(excel_path, sheet_name="Results")
@@ -85,9 +84,9 @@ def plot_performance_profiles(excel_path=None, save_path=None):
     df = df[df["Success"] > 0].copy()
 
     if df.empty:
-        print("[LỖI] Không có dữ liệu hợp lệ (Success > 0)")
+        print("[ERROR] No valid data (Success > 0)")
         return
-
+    
     problems = df["Problem"].unique()
     methods = list(df["Method"].unique())
 
@@ -114,11 +113,7 @@ def plot_performance_profiles(excel_path=None, save_path=None):
         else:
             col_name = metric if metric in df.columns else None
 
-        display_title = metric
-        if metric == "Spread_Gamma":
-            display_title = r"Spread ($\Gamma$)"
-        elif metric == "Spread_Gamma":
-            display_title = r"Spread ($\Gamma$)"
+        display_title = r"Spread ($\Gamma$)" if metric == "Spread_Gamma" else metric
 
         if col_name is None:
             plt.close(fig)
@@ -134,6 +129,7 @@ def plot_performance_profiles(excel_path=None, save_path=None):
         else:
             best_per_prob = pivot.where(pivot > 0).min(axis=1).fillna(0).values
 
+        ratio_M = 1e6
         ratios_dict = {}
         for method in methods:
             if method not in pivot.columns:
@@ -147,19 +143,20 @@ def plot_performance_profiles(excel_path=None, save_path=None):
                     ratios = np.where(best_per_prob > 0, vals / best_per_prob, np.inf)
             
             ratios = np.maximum(1.0, ratios)
-            ratios[~np.isfinite(ratios)] = np.nan
+            ratios = np.where(np.isnan(ratios), ratio_M, ratios)
+            ratios[~np.isfinite(ratios)] = ratio_M
 
             ratios_dict[method] = ratios
 
         # Calculate absolute maximum possible tau first
         tau_max_abs = 1.0
         for method, ratios in ratios_dict.items():
-            finite = ratios[np.isfinite(ratios)]
+            finite = ratios[(np.isfinite(ratios)) & (ratios < ratio_M)]
             if len(finite) > 0:
                 tau_max_abs = max(tau_max_abs, np.max(finite))
 
         # Ensure tau_max is at least 1.0
-        tau_max = max(1.01, tau_max_abs * 1.05) # Add a very small margin (5%)
+        tau_max = max(1, tau_max_abs * 1.02)
 
         n_grid = 100
         tau_grid = np.logspace(0, np.log2(tau_max), n_grid, base=2)
@@ -191,7 +188,6 @@ def plot_performance_profiles(excel_path=None, save_path=None):
             ax.plot([], [], color=color, marker=marker, linewidth=1.8, 
                     markersize=6, label=method)
 
-            win_counts[method][metric] = int(0)
 
         for prob in pivot.index:
             row = pivot.loc[prob].dropna()
@@ -305,7 +301,7 @@ def plot_start_end_point(problem_name, m, methods, f_starts, f_opts, save_dir=".
 
     for idx, method_name in enumerate(method_names):
         ax = axes[idx]
-        color = color_cycle[idx % len(color_cycle)]
+        color = COLORS[idx % len(COLORS)]
         f_ends = np.array(f_opts[method_name])
 
         valid_indices = [i for i in range(len(f_starts)) if np.all(np.isfinite(f_ends[i]))]
@@ -363,7 +359,6 @@ def plot_start_end_point(problem_name, m, methods, f_starts, f_opts, save_dir=".
     fig.suptitle(f'Trajectory from Start to End - {problem_name}',
                  fontweight="bold", fontsize=16)
     plt.tight_layout(rect=[0, 0, 1, 0.97])
-    import os
     plt.savefig(os.path.join(save_dir, f"Trajectory_{problem_name}.png"), bbox_inches="tight", dpi=300)
     plt.close()
 

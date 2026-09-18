@@ -168,8 +168,7 @@ class computePoints:
     # Compute Hypervolume indicator
     @staticmethod
     def compute_hypervolume(f_nondominated, reference_point):
-        # reference_point: reference point 
-
+        # Convert to numpy arrays for consistency
         f_nondominated = np.array(f_nondominated)
         reference_point = np.array(reference_point)
         if f_nondominated.shape[0] == 0:
@@ -181,8 +180,12 @@ class computePoints:
 
     # Compute Multi-objective Spread (Gamma) indicator
     @staticmethod
-    def compute_spread(F_method, Q, R):
+    def compute_spread(F_method, Qmin, Qmax):
         F_method = np.array(F_method)
+
+        # Handle empty arrays and 1D arrays (e.g., shape (0,))
+        if F_method.size == 0 or F_method.ndim != 2:
+            return float('inf')
         N, m = F_method.shape
         
         if N < 2:
@@ -192,7 +195,7 @@ class computePoints:
         
         for j in range(m):
             sorted_fj = np.sort(F_method[:, j])
-            fj_all = np.concatenate(([Q[j]], sorted_fj, [R[j]]))
+            fj_all = np.concatenate(([Qmin[j]], sorted_fj, [Qmax[j]]))
             gamma = np.diff(fj_all)  
             
             gamma_0, gamma_N = gamma[0], gamma[-1]
@@ -222,7 +225,7 @@ class computePoints:
     # Find global Pareto front from all local nondominated points
     @staticmethod
     def find_global_nondominated(local_dict):
-        all_points = [p for method in local_dict for p in local_dict[method]]
+        all_points = [f for method in local_dict for f in local_dict[method]]
         return computePoints.find_nondominated_points(all_points)
 
     # Purity, Hypervolume, IGD+
@@ -231,26 +234,29 @@ class computePoints:
         metrics = {}
         results = {}
 
-        local_dict = computePoints.find_local_nondominated(f_opts, methods)
+        local_dict = computePoints.find_local_nondominated(f_opts, methods)   # Fa,p
 
-        F_global = computePoints.find_global_nondominated(local_dict)
+        F_global = computePoints.find_global_nondominated(local_dict)     # Fp
+
+        F_global_arr = np.array(F_global)
 
         # Reference point to compute HV and limits Q, R for Spread
-        all_local_pts = [p for method in methods for p in local_dict[method]]
-        all_pts_arr = np.vstack(all_local_pts) if len(all_local_pts) > 0 else np.array([])
+        all_local_pts = [f for method in methods for f in local_dict[method]]  # \cup_{a\in Algs} Fa,p
+        all_pts_arr = np.vstack(all_local_pts) if len(all_local_pts) > 0 else np.array([])   
         
-        if len(all_pts_arr) > 0:
+
+        if len(F_global_arr) > 0 and len(all_pts_arr) > 0:
             reference_point = np.max(all_pts_arr, axis=0) * 1.1
-            Q = np.min(all_pts_arr, axis=0)  # Ideal point
-            R = np.max(all_pts_arr, axis=0)  # Nadir point
+            Qmin = np.min(F_global_arr, axis=0)  
+            Qmax = np.max(F_global_arr, axis=0)  
         else:
-            reference_point, Q, R = None, None, None
+            reference_point, Qmin, Qmax = None, None, None
 
         # Step 3: Compute metrics for each method
         for method in methods:
             solutions_f = np.array(f_opts[method])
             solutions_x = np.array(x_opts[method])
-            F_method = np.array(local_dict[method])
+            F_method = np.array(local_dict[method])  # Fa,p
 
             indices = np.array(
                 [i for i in range(len(solutions_f)) if any(np.all(solutions_f[i] == q) for q in F_method)],
@@ -258,20 +264,20 @@ class computePoints:
             )
             X_method = solutions_x[indices] if len(indices) > 0 else np.array([])
 
-            num_nondominated = len(F_method)
-            F_method_in_global = [p for p in F_method if any(np.all(p == q) for q in F_global)]
+            F_method_in_global = [p for p in F_method if any(np.all(p == q) for q in F_global)]   #Fa,p \cap Fp   
 
-            purity_metric = len(F_method_in_global) / num_nondominated if num_nondominated > 0 else 0
+            purity_metric = len(F_method_in_global) / len(F_method) if len(F_method) > 0 else 0
 
             hv_metric = computePoints.compute_hypervolume(F_method, reference_point) if reference_point is not None else 0
-            if Q is not None and R is not None:
-                gamma_metric = computePoints.compute_spread(F_method, Q, R)
+
+            if Qmin is not None and Qmax is not None:
+                gamma_metric = computePoints.compute_spread(F_method_in_global, Qmin, Qmax)
             else:
                 gamma_metric = float('inf')
 
             metrics[method] = {
                 "Purity": purity_metric,
-                "N": num_nondominated,
+                "N": len(F_method),
                 "Global_nondominated": len(F_method_in_global),
                 "Hypervolume": hv_metric,
                 "Spread_Gamma": gamma_metric,
