@@ -43,7 +43,7 @@ python main_robust_problem.py
 ```
 This script will:
 *   Evaluate multiple algorithms (AMPG1, AMPG2, PGM, etc.) from different starting points.
-*   Compute metrics (Purity, Hypervolume, Spread, Global non-dominated points).
+*   Compute metrics (Purity, Hypervolume, Spread_Gamma, Global nondominated points).
 *   Generate an Excel file (e.g., `Results.xlsx`) containing detailed results and error statistics in the output directory.
 
 ### 2. Biobjecitive Supervised Feature Selection (B-SFS)
