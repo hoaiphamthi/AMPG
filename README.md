@@ -34,9 +34,9 @@ pip install -r requirements.txt
 
 ## Usage
 
-### 1. Robust Optimization Problems
+### 1. Multiobjective Robust Optimization Problems
 
-To run the robust optimization benchmark across predefined test problems:
+To run the multiobjective robust optimization problem across benchmark datasets presented in our paper:
 
 ```bash
 python main_robust_problem.py
@@ -46,14 +46,14 @@ This script will:
 *   Compute metrics (Purity, Hypervolume, Spread, Global non-dominated points).
 *   Generate an Excel file (e.g., `Results.xlsx`) containing detailed results and error statistics in the output directory.
 
-### 2. Supervised Feature Selection (SFS)
+### 2. Biobjecitive Supervised Feature Selection (BSFS)
 
-To run the feature selection benchmark:
+To run the biobjective supervised feature selection problem across benchmark datasets presented in our paper:
 
 ```bash
 python main_sfs_benchmark.py
 ```
-This script evaluates the algorithms on datasets located in the `datas_sfs` directory. Results and metrics will be saved similarly.
+This script evaluates the algorithms on datasets located in the `data` folder extracted from the corresponding ZIP file. Results and metrics will be saved similarly.
 
 
 ### 3. Plotting Performance Profiles
