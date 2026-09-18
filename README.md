@@ -15,10 +15,10 @@ This project implements algorithms for solving multi-objective composite optimiz
 
 ## Project Structure
 
-*   **`main_robust_problem.py`**: Main script to run robust multi-objective optimization problems.
-*   **`main_sfs_benchmark.py`**: Main script to run supervised feature selection benchmarks via multiobjective optimization.
-*   **`robust_algorithms.py`**: Implementations of the optimization algorithms for robust problems.
-*   **`sfs_algorithms.py`**: Implementations of the algorithms for supervised feature selection problems.
+*   **`main_robust_problem.py`**: Main script to run  multiobjective robust optimization problems.
+*   **`main_sfs_benchmark.py`**: Main script to run biobjective supervised feature selection benchmarks via multiobjective optimization.
+*   **`robust_algorithms.py`**: Implementations of the optimization algorithms for multiobjective robust optimization problems.
+*   **`sfs_algorithms.py`**: Implementations of the algorithms for biobjective supervised feature selection problems.
 *   **`computePoints.py`**: Utilities for computing Pareto fronts (non-dominated sorting), hypervolume, spread (Delta), and other metrics.
 *   **`evalg.py`, `evalh.py`, `evalgradg.py`**: Functions evaluating the objective components ($g$, $h$) and gradients for robust problems.
 *   **`data.py`, `inip.py`**: Utilities for generating constraint data and initializing problem parameters of robust problems.
@@ -46,7 +46,7 @@ This script will:
 *   Compute metrics (Purity, Hypervolume, Spread, Global non-dominated points).
 *   Generate an Excel file (e.g., `Results.xlsx`) containing detailed results and error statistics in the output directory.
 
-### 2. Biobjecitive Supervised Feature Selection (BSFS)
+### 2. Biobjecitive Supervised Feature Selection (B-SFS)
 
 To run the biobjective supervised feature selection problem across benchmark datasets presented in our paper:
 
@@ -78,7 +78,7 @@ Execution creates a timestamped or parameter-named output directory (e.g., `Resu
 *   For Performance profiles: run the `plots.py` file, replacing the path with the corresponding result file path.
 
 ## Appendix: Benchmark datasets for SFS problems
-The datasets used in the SFS experiments are sourced from standard public repositories:
+The datasets used in the B-SFS experiments are sourced from standard public repositories:
 
 | Dataset | Source |
 | :--- | :--- |
