@@ -9,8 +9,8 @@ This project implements algorithms for solving multi-objective composite optimiz
 ### Implemented Algorithms
 
 *   **AMPG1 / AMPG2**: The main proposed algorithms in the paper
-*   **MPGE**: The algorithm proposed by Bello et al. (2025)
-*   **PGM / accPGM**: The algorithms proposed by Zhao et al. (2025)
+*   **MPGE**: The algorithm proposed by Bello et al. (2025) in the paper " A proximal gradient method with an explicit line search for multiobjective optimization" (DOI: 10.1007/s10589-025-00711-x)
+*   **PGM / accPGM**: The algorithms proposed by Zhao et al. (2025) in the paper "Proximal gradient method for convex multiobjective optimization problems without Lipschitz continuous gradients" (DOI: 10.1007/s10589-025-00663-2)
 
 
 ## Project Structure
