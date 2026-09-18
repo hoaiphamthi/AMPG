@@ -1,4 +1,4 @@
-# Novel adaptive proximal gradient algorithms for solving multiobjective composite optimization problems
+# New adaptive proximal gradient algorithms for solving multiobjective composite optimization problems
 This repository contains Python implementations of paper "New adaptive proximal gradient algorithms for solving multiobjective composite optimization problems".
 
 # Authors: PHAM THI HOAI, PHAM THI KHANH, JEN-CHIH YAO
