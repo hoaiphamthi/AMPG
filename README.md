@@ -15,13 +15,13 @@ This project implements algorithms for solving multi-objective composite optimiz
 
 ## Project Structure
 
-*   **`main_robust_problem.py`**: Main script to run  multiobjective robust optimization problems.
+*   **`main_robust_problem.py`**: Main script to run   robust multiobjective optimization problems.
 *   **`main_sfs_benchmark.py`**: Main script to run biobjective supervised feature selection benchmarks via multiobjective optimization.
-*   **`robust_algorithms.py`**: Implementations of the optimization algorithms for multiobjective robust optimization problems.
+*   **`robust_algorithms.py`**: Implementations of the optimization algorithms for  robust multiobjective optimization problems.
 *   **`sfs_algorithms.py`**: Implementations of the algorithms for biobjective supervised feature selection problems.
-*   **`computePoints.py`**: Utilities for computing Pareto fronts (non-dominated sorting), hypervolume, spread (Delta), and other metrics.
-*   **`evalg.py`, `evalh.py`, `evalgradg.py`**: Functions evaluating the objective components ($g$, $h$) and gradients for robust problems.
-*   **`data.py`, `inip.py`**: Utilities for generating constraint data and initializing problem parameters of robust problems.
+*   **`computePoints.py`**: Utilities for computing Pareto fronts (non-dominated sorting), Hypervolume, Spread (Gamma), and other metrics.
+*   **`evalg.py`, `evalh.py`, `evalgradg.py`**: Functions evaluating the objective components ($G_j$, $H_j$) and gradients for robust multiobjective optimization problems.
+*   **`data.py`, `inip.py`**: Utilities for generating constraint data and initializing problem parameters of robust multiobjective optimization problems.
 *   **`plots.py`**: Plotting utilities for Pareto fronts and convergence.
 
 ## Requirements
@@ -34,9 +34,9 @@ pip install -r requirements.txt
 
 ## Usage
 
-### 1. Multiobjective Robust Optimization Problems
+### 1.  Robust Multiobjective Optimization Problems
 
-To run the multiobjective robust optimization problem across benchmark datasets presented in our paper:
+To run the  robust multiobjective optimization problem across benchmark datasets presented in our paper:
 
 ```bash
 python main_robust_problem.py
